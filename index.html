@@ -723,14 +723,14 @@ select.form-control { cursor: pointer; }
 }
 .config-url input:focus { border-color: var(--teal-light); }
 
-/* ─── Demo Mode ─────────────────────────────────── */
-.demo-badge {
+/* ─── Mode Badge ────────────────────────────────── */
+.mode-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: var(--amber-pale);
-  color: var(--amber);
-  border: 1px solid #f0c060;
+  background: var(--green-pale);
+  color: var(--green);
+  border: 1px solid #9dd8ba;
   padding: 3px 10px;
   border-radius: 99px;
   font-size: 0.72rem;
@@ -764,7 +764,7 @@ select.form-control { cursor: pointer; }
       <div class="header-time">Dashboard Layanan Kesehatan</div>
       <div class="header-clock" id="clock"></div>
     </div>
-    <span class="demo-badge" id="mode-badge">⚡ Demo</span>
+    <span class="mode-badge" id="mode-badge">🟢 Live</span>
   </div>
 </header>
 
@@ -792,7 +792,6 @@ select.form-control { cursor: pointer; }
       <div class="config-url">
         <input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/XXXX.../exec"/>
         <button class="btn btn-primary btn-sm" onclick="saveUrl()">💾 Simpan & Muat</button>
-        <button class="btn btn-ghost btn-sm" onclick="useDemoMode()">🎭 Mode Demo</button>
       </div>
     </div>
   </div>
@@ -1250,34 +1249,7 @@ select.form-control { cursor: pointer; }
 // ── State ────────────────────────────────────────
 let allObat    = [];
 let allRuangan = [];
-let appsScriptUrl = localStorage.getItem('chs_url') || '';
-let isDemoMode = false;
-
-// ── Demo Data ────────────────────────────────────
-const DEMO_OBAT = [
-  { rowIndex:2, nama:'Paracetamol 500mg', stok:150, satuan:'tablet',  kategori:'Analgesik' },
-  { rowIndex:3, nama:'Amoxicillin 500mg',  stok:8,   satuan:'kapsul', kategori:'Antibiotik' },
-  { rowIndex:4, nama:'Omeprazole 20mg',    stok:60,  satuan:'kapsul', kategori:'Gastrointestinal' },
-  { rowIndex:5, nama:'Cetirizine 10mg',    stok:5,   satuan:'tablet', kategori:'Antihistamin' },
-  { rowIndex:6, nama:'Vitamin C 500mg',    stok:200, satuan:'tablet', kategori:'Vitamin' },
-  { rowIndex:7, nama:'Ibuprofen 400mg',    stok:45,  satuan:'tablet', kategori:'Analgesik' },
-  { rowIndex:8, nama:'Metformin 500mg',    stok:3,   satuan:'tablet', kategori:'Kardiovaskular' },
-  { rowIndex:9, nama:'Betahistine 16mg',   stok:30,  satuan:'tablet', kategori:'Umum' },
-  { rowIndex:10,nama:'Salep Kulit 2.5%',  stok:12,  satuan:'tube',   kategori:'Dermatologi' },
-  { rowIndex:11,nama:'ORS Rehidrasi',      stok:80,  satuan:'sachet', kategori:'Umum' },
-];
-const DEMO_RUANGAN = [
-  { rowIndex:2, no:1, nama:'Ruang Periksa 1',  status:'Terisi',      pengguna:'Budi Santoso',    catatan:'Konsultasi umum' },
-  { rowIndex:3, no:2, nama:'Ruang Periksa 2',  status:'Kosong',      pengguna:'-',               catatan:'' },
-  { rowIndex:4, no:3, nama:'Ruang Periksa 3',  status:'Kosong',      pengguna:'-',               catatan:'' },
-  { rowIndex:5, no:4, nama:'Bed Rawat Inap A1', status:'Terisi',      pengguna:'Siti Rahayu',     catatan:'Observasi 24 jam' },
-  { rowIndex:6, no:5, nama:'Bed Rawat Inap A2', status:'Terisi',      pengguna:'Ahmad Fauzi',     catatan:'Post-operasi' },
-  { rowIndex:7, no:6, nama:'Bed Rawat Inap A3', status:'Kosong',      pengguna:'-',               catatan:'' },
-  { rowIndex:8, no:7, nama:'Bed Rawat Inap B1', status:'Maintenance', pengguna:'-',               catatan:'Perbaikan AC' },
-  { rowIndex:9, no:8, nama:'Ruang Tindakan',    status:'Kosong',      pengguna:'-',               catatan:'' },
-  { rowIndex:10,no:9, nama:'Ruang IGD',         status:'Terisi',      pengguna:'Dewi Lestari',    catatan:'Keadaan darurat' },
-  { rowIndex:11,no:10,nama:'Ruang Obat',        status:'Kosong',      pengguna:'-',               catatan:'' },
-];
+let appsScriptUrl = localStorage.getItem('chs_url') || window.location.href;
 
 // ── Clock ─────────────────────────────────────────
 function updateClock() {
@@ -1313,28 +1285,13 @@ function saveUrl() {
   }
   appsScriptUrl = url;
   localStorage.setItem('chs_url', url);
-  isDemoMode = false;
-  document.getElementById('mode-badge').textContent = '🟢 Live';
-  document.getElementById('mode-badge').style.background = 'var(--green-pale)';
-  document.getElementById('mode-badge').style.color = 'var(--green)';
   document.getElementById('config-banner').style.display = 'none';
   showToast('URL tersimpan! Memuat data...', 'success');
   loadData();
 }
 
-function useDemoMode() {
-  isDemoMode = true;
-  document.getElementById('config-banner').style.display = 'none';
-  document.getElementById('mode-badge').textContent = '🎭 Demo';
-  allObat    = JSON.parse(JSON.stringify(DEMO_OBAT));
-  allRuangan = JSON.parse(JSON.stringify(DEMO_RUANGAN));
-  renderAll();
-  showToast('Mode Demo aktif. Data tidak tersimpan ke Spreadsheet.', '');
-}
-
 // ── Load Data ─────────────────────────────────────
 async function loadData() {
-  if (isDemoMode) { renderAll(); return; }
   if (!appsScriptUrl) return;
   try {
     const res  = await fetch(appsScriptUrl, {
@@ -1734,7 +1691,6 @@ function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 // ── API Call Helper ───────────────────────────────
 async function apiCall(action, data, onSuccess) {
-  if (isDemoMode) { onSuccess(); return; }
   if (!appsScriptUrl) { showToast('URL Apps Script belum dikonfigurasi.', 'error'); return; }
   try {
     const res  = await fetch(appsScriptUrl, {
@@ -1886,22 +1842,16 @@ function togglePwVisibility() {
 
 // ── Init ──────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  if (appsScriptUrl) {
-    document.getElementById('apps-script-url').value = appsScriptUrl;
-    document.getElementById('mode-badge').textContent = '🟢 Live';
-    document.getElementById('mode-badge').style.background = 'var(--green-pale)';
-    document.getElementById('mode-badge').style.color = 'var(--green)';
+  document.getElementById('apps-script-url').value = appsScriptUrl;
+  if (appsScriptUrl.includes('script.google.com')) {
     document.getElementById('config-banner').style.display = 'none';
-    isDemoMode = false;
-    loadData();
-  } else {
-    useDemoMode();
   }
+  loadData();
   // Restore admin session if still active
   if (getAdminGateState() === 'open') showAdminPanel();
   else { showAdminGate(); updateAttemptsUI(); }
   // Auto refresh every 5 minutes
-  setInterval(() => { if (!isDemoMode) loadData(); }, 5 * 60 * 1000);
+  setInterval(loadData, 5 * 60 * 1000);
 });
 </script>
 <style>
