@@ -785,15 +785,18 @@ select.form-control { cursor: pointer; }
     <div class="icon">🔗</div>
     <div>
       <p>
-        <strong>Hubungkan ke Google Spreadsheet.</strong><br>
-        Deploy Google Apps Script sebagai Web App, lalu masukkan URL-nya di sini.
-        Sheet diperlukan: <code>Obat</code> (Nama Obat | Stok | Satuan | Kategori)
-        dan <code>Ruangan</code> (No | Nama Ruangan | Status | Pengguna | Catatan).
+        <strong>Koneksi data aktif otomatis.</strong><br>
+        Aplikasi ini sudah memakai URL Web App Apps Script bawaan di dalam kode, jadi
+        tidak perlu input ulang di tiap device.
       </p>
       <div class="config-url">
-        <input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/XXXX.../exec"/>
+        <input type="text" id="apps-script-url" placeholder="Opsional: ganti endpoint Apps Script jika diperlukan"/>
         <button class="btn btn-primary btn-sm" onclick="saveUrl()">💾 Simpan & Muat</button>
       </div>
+      <p class="page-subtitle" style="margin:10px 0 0">
+        Opsional: jika endpoint diganti manual, URL aplikasi ini otomatis membawa parameter
+        <code>?api=...</code> agar perangkat lain tetap langsung tersambung.
+      </p>
     </div>
   </div>
 
@@ -1250,7 +1253,52 @@ select.form-control { cursor: pointer; }
 // ── State ────────────────────────────────────────
 let allObat    = [];
 let allRuangan = [];
-let appsScriptUrl = localStorage.getItem('chs_url') || window.location.href;
+const DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9ffog37X00NIXoUvUX7MG1DfTuLdJaT345r0vo9o7io7uc3Pj8FzbUbeaGrg-loDS3A/exec';
+let appsScriptUrl = resolveAppsScriptUrl();
+
+function isValidAppsScriptEndpoint(url) {
+  try {
+    const u = new URL(url);
+    const isGoogleScriptHost = u.hostname === 'script.google.com' || u.hostname.endsWith('.googleusercontent.com');
+    const looksLikeWebAppEndpoint = /\/macros\/.+\/(exec|dev)$/.test(u.pathname);
+    return isGoogleScriptHost && looksLikeWebAppEndpoint;
+  } catch (_) {
+    return false;
+  }
+}
+
+function normalizeAppsScriptUrl(url) {
+  try {
+    const u = new URL(url);
+    return `${u.origin}${u.pathname}`;
+  } catch (_) {
+    return '';
+  }
+}
+
+function setApiQueryParam(url) {
+  if (!url) return;
+  const currentUrl = new URL(window.location.href);
+  currentUrl.searchParams.set('api', url);
+  window.history.replaceState({}, '', currentUrl.toString());
+}
+
+function resolveAppsScriptUrl() {
+  const currentUrl = new URL(window.location.href);
+  const fromQuery = normalizeAppsScriptUrl(currentUrl.searchParams.get('api') || '');
+  if (isValidAppsScriptEndpoint(fromQuery)) return fromQuery;
+
+  const fromStorage = normalizeAppsScriptUrl(localStorage.getItem('chs_url') || '');
+  if (isValidAppsScriptEndpoint(fromStorage)) return fromStorage;
+
+  const fromDefault = normalizeAppsScriptUrl(DEFAULT_APPS_SCRIPT_URL);
+  if (isValidAppsScriptEndpoint(fromDefault)) return fromDefault;
+
+  const fromCurrentPage = normalizeAppsScriptUrl(window.location.href);
+  if (isValidAppsScriptEndpoint(fromCurrentPage)) return fromCurrentPage;
+
+  return '';
+}
 
 // ── Clock ─────────────────────────────────────────
 function updateClock() {
@@ -1280,12 +1328,14 @@ function switchTab(tab) {
 
 // ── URL Config ────────────────────────────────────
 function saveUrl() {
-  const url = document.getElementById('apps-script-url').value.trim();
-  if (!url.startsWith('https://script.google.com')) {
-    showToast('URL tidak valid. Gunakan URL Apps Script yang benar.', 'error'); return;
+  const rawUrl = document.getElementById('apps-script-url').value.trim();
+  const url = normalizeAppsScriptUrl(rawUrl);
+  if (!isValidAppsScriptEndpoint(url)) {
+    showToast('URL tidak valid. Gunakan URL Web App Apps Script (akhiran /exec atau /dev).', 'error'); return;
   }
   appsScriptUrl = url;
   localStorage.setItem('chs_url', url);
+  setApiQueryParam(url);
   document.getElementById('config-banner').style.display = 'none';
   showToast('URL tersimpan! Memuat data...', 'success');
   loadData();
@@ -1844,8 +1894,9 @@ function togglePwVisibility() {
 // ── Init ──────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('apps-script-url').value = appsScriptUrl;
-  if (appsScriptUrl.includes('script.google.com')) {
+  if (isValidAppsScriptEndpoint(appsScriptUrl)) {
     document.getElementById('config-banner').style.display = 'none';
+    setApiQueryParam(appsScriptUrl);
   }
   loadData();
   // Restore admin session if still active
