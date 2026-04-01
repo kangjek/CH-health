@@ -805,7 +805,7 @@ select.form-control { cursor: pointer; }
   ══════════════════════════════════════════════ -->
   <section class="section active" id="section-overview">
     <p class="page-title">Selamat Datang 👋</p>
-    <p class="page-subtitle">Ringkasan kondisi klinik Chin Hsin Healthy hari ini.</p>
+    <p class="page-subtitle">Ringkasan kondisi klinik Chin Hsin hari ini.</p>
 
     <div class="stats-row">
       <div class="stat-card teal">
@@ -816,7 +816,7 @@ select.form-control { cursor: pointer; }
       <div class="stat-card red">
         <div class="stat-label">Stok Kritis</div>
         <div class="stat-value" id="stat-kritis">—</div>
-        <div class="stat-sub">obat stok ≤ 10</div>
+        <div class="stat-sub">obat stok ≤ 6</div>
       </div>
       <div class="stat-card green">
         <div class="stat-label">Ruangan Kosong</div>
@@ -1378,7 +1378,7 @@ function renderAll() {
 
 // ── Stats Overview ────────────────────────────────
 function renderStatsOverview() {
-  const kritis = allObat.filter(o => o.stok <= 10);
+  const kritis = allObat.filter(o => o.stok <= 6);
   const kosong  = allRuangan.filter(r => r.status === 'Kosong');
   const terisi  = allRuangan.filter(r => r.status === 'Terisi');
   document.getElementById('stat-total-obat').textContent = allObat.length;
@@ -1391,7 +1391,7 @@ function renderStatsOverview() {
 // ── Kritis Table ──────────────────────────────────
 function renderKritis() {
   const tbody = document.getElementById('tbody-kritis');
-  const kritis = allObat.filter(o => o.stok <= 10);
+  const kritis = allObat.filter(o => o.stok <= 6);
   if (!kritis.length) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:28px;color:var(--ink-light)">
       ✅ Tidak ada obat dengan stok kritis saat ini.
@@ -1447,8 +1447,8 @@ function renderObatTable(filter='') {
   const maxStok = Math.max(...allObat.map(o => o.stok), 1);
   tbody.innerHTML = data.map((o, i) => {
     const pct   = Math.round((o.stok / maxStok) * 100);
-    const color = o.stok <= 10 ? 'var(--red)' : o.stok <= 30 ? 'var(--amber)' : 'var(--teal)';
-    const sBadge = o.stok <= 10
+    const color = o.stok <= 6 ? 'var(--red)' : o.stok <= 30 ? 'var(--amber)' : 'var(--teal)';
+    const sBadge = o.stok <= 6
       ? '<span class="badge badge-red">⚠️ Kritis</span>'
       : o.stok <= 30
       ? '<span class="badge badge-amber">📉 Rendah</span>'
