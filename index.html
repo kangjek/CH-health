@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chin Hsin Healthy — Dashboard Kesehatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+/* ─── CSS Variables ─────────────────────────────── */
+:root {
+  --teal-dark:  #0a4a4a;
+  --teal:       #0d6b6b;
+  --teal-mid:   #1a8f8f;
+  --teal-light: #3dbfbf;
+  --teal-pale:  #e0f5f5;
+  --cream:      #faf7f2;
+  --cream-dark: #f0ebe2;
+  --sand:       #e8ddd0;
+  --gold:       #c9a84c;
+  --gold-light: #f0d98a;
+  --red:        #d64e4e;
+  --red-pale:   #fdeaea;
+  --amber:      #d4870a;
+  --amber-pale: #fff3dc;
+  --green:      #2d8f5e;
+  --green-pale: #e3f5ec;
+  --ink:        #1a2a2a;
+  --ink-mid:    #3a5252;
+  --ink-light:  #6a8888;
+  --white:      #ffffff;
+  --shadow-sm:  0 2px 8px rgba(10,74,74,0.08);
+  --shadow-md:  0 4px 20px rgba(10,74,74,0.12);
+  --shadow-lg:  0 8px 40px rgba(10,74,74,0.16);
+  --radius:     14px;
+  --radius-sm:  8px;
+}
+
+/* ─── Reset & Base ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--teal-light); border-radius: 99px; }
+
+/* ─── Header ────────────────────────────────────── */
+.header {
+  background: var(--teal-dark);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--teal-light), var(--gold));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  color: var(--white);
+  letter-spacing: 0.01em;
+}
+.header-title span {
+  color: var(--gold-light);
+  font-style: italic;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-time {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  font-weight: 300;
+}
+.header-clock {
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Nav Tabs ──────────────────────────────────── */
+.nav-tabs {
+  background: var(--teal);
+  display: flex;
+  gap: 0;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nav-tab {
+  padding: 14px 22px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-tab:hover { color: rgba(255,255,255,0.9); }
+.nav-tab.active {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold);
+}
+
+/* ─── Main Layout ───────────────────────────────── */
+.main { max-width: 1280px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ─── Section ───────────────────────────────────── */
+.section { display: none; }
+.section.active { display: block; animation: fadeUp 0.35s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Page Title ────────────────────────────────── */
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.7rem;
+  color: var(--teal-dark);
+  margin-bottom: 6px;
+}
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--ink-light);
+  margin-bottom: 28px;
+}
+
+/* ─── Stat Cards ────────────────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--sand);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.stat-card.teal::before   { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+.stat-card.gold::before   { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.stat-card.green::before  { background: linear-gradient(90deg, var(--green), #5ecba3); }
+.stat-card.red::before    { background: linear-gradient(90deg, var(--red), #f08080); }
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-light);
+  margin-bottom: 10px;
+}
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  color: var(--teal-dark);
+  line-height: 1;
+}
+.stat-sub {
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  margin-top: 4px;
+}
+
+/* ─── Card ──────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--sand);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  color: var(--teal-dark);
+}
+.card-body { padding: 0; }
+
+/* ─── Search Input ──────────────────────────────── */
+.search-wrap { position: relative; }
+.search-wrap input {
+  padding: 8px 14px 8px 36px;
+  border: 1px solid var(--sand);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: var(--cream);
+  color: var(--ink);
+  width: 220px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-wrap input:focus { border-color: var(--teal-light); }
+.search-wrap .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-light);
+  font-size: 14px;
+}
+
+/* ─── Table ─────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+thead th {
+  background: var(--cream);
+  padding: 12px 18px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-light);
+  border-bottom: 1px solid var(--sand);
+  white-space: nowrap;
+}
+tbody tr {
+  border-bottom: 1px solid var(--cream-dark);
+  transition: background 0.15s;
+}
+tbody tr:hover { background: var(--cream); }
+tbody tr:last-child { border-bottom: none; }
+tbody td {
+  padding: 13px 18px;
+  color: var(--ink-mid);
+  vertical-align: middle;
+}
+.td-name { font-weight: 500; color: var(--ink); }
+
+/* ─── Badges ────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.badge-green  { background: var(--green-pale);  color: var(--green); }
+.badge-red    { background: var(--red-pale);    color: var(--red); }
+.badge-amber  { background: var(--amber-pale);  color: var(--amber); }
+.badge-teal   { background: var(--teal-pale);   color: var(--teal); }
+.badge-gray   { background: var(--cream-dark);  color: var(--ink-light); }
+
+/* ─── Stock Bar ─────────────────────────────────── */
+.stock-bar-wrap { display: flex; align-items: center; gap: 10px; }
+.stock-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--cream-dark);
+  border-radius: 99px;
+  overflow: hidden;
+  min-width: 80px;
+}
+.stock-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+.stock-num { font-size: 0.85rem; font-weight: 600; color: var(--ink); min-width: 40px; text-align: right; }
+
+/* ─── Room Grid ─────────────────────────────────── */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 22px;
+}
+.room-card {
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.room-card::after {
+  content: attr(data-icon);
+  position: absolute;
+  right: -4px; top: -8px;
+  font-size: 56px;
+  opacity: 0.06;
+  line-height: 1;
+}
+.room-card.kosong {
+  background: var(--green-pale);
+  border-color: #b8e8d0;
+}
+.room-card.terisi {
+  background: var(--red-pale);
+  border-color: #f5c0c0;
+}
+.room-card.maintenance {
+  background: var(--amber-pale);
+  border-color: #f5d8a0;
+}
+.room-no {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+.room-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.room-user {
+  font-size: 0.8rem;
+  color: var(--ink-mid);
+  margin-top: 6px;
+}
+.room-note {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ─── Buttons ───────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: all 0.18s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--teal);
+  color: var(--white);
+}
+.btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn-ghost {
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal-light);
+}
+.btn-ghost:hover { background: var(--teal-pale); }
+.btn-danger {
+  background: var(--red);
+  color: var(--white);
+}
+.btn-danger:hover { background: #b83c3c; }
+.btn-sm { padding: 6px 12px; font-size: 0.78rem; }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #a8852c);
+  color: var(--white);
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+/* ─── Admin Login Gate ──────────────────────────── */
+.admin-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+}
+.login-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--sand);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+}
+.login-card-top {
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+  padding: 36px 32px 28px;
+  text-align: center;
+}
+.login-lock-icon {
+  width: 60px; height: 60px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin: 0 auto 16px;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.login-card-top h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.login-card-top p {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+.login-card-body { padding: 28px 32px 32px; }
+.login-error {
+  background: var(--red-pale);
+  border: 1px solid #f5c0c0;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: var(--red);
+  margin-bottom: 16px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.login-error.visible { display: flex; }
+.pw-input-wrap { position: relative; }
+.pw-input-wrap .form-control { padding-right: 42px; }
+.pw-toggle {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--ink-light);
+  padding: 2px;
+  line-height: 1;
+}
+.login-attempts {
+  font-size: 0.75rem;
+  color: var(--ink-light);
+  text-align: center;
+  margin-top: 12px;
+}
+.login-attempts.warning { color: var(--red); font-weight: 600; }
+
+/* ─── Admin Panel Header ────────────────────────── */
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--white);
+  border: 1px solid var(--sand);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+  box-shadow: var(--shadow-sm);
+}
+.admin-user-info .dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── Admin Section ─────────────────────────────── */
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+@media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-light);
+  margin-bottom: 6px;
+}
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--sand);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-family: inherit;
+  background: var(--cream);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+  border-color: var(--teal-light);
+  box-shadow: 0 0 0 3px rgba(61,191,191,0.12);
+}
+select.form-control { cursor: pointer; }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+
+/* ─── Admin Table Edit ──────────────────────────── */
+.edit-btn {
+  background: var(--teal-pale);
+  color: var(--teal);
+  border: none;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.edit-btn:hover { background: var(--teal-light); color: var(--white); }
+
+/* ─── Modal ─────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,40,40,0.55);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn 0.25s ease;
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--teal-dark);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--ink-light);
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px;
+}
+.modal-body { padding: 20px 24px; }
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--cream-dark);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ─── Toast ─────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--teal-dark);
+  color: var(--white);
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease;
+  max-width: 320px;
+}
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Loading ───────────────────────────────────── */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  color: var(--ink-light);
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--sand);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Config Banner ─────────────────────────────── */
+.config-banner {
+  background: linear-gradient(135deg, #fff8e6, #fff3d4);
+  border: 1.5px solid var(--gold-light);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.config-banner .icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.config-banner p { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.55; }
+.config-banner code {
+  background: rgba(0,0,0,0.07);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-family: 'Courier New', monospace;
+  color: var(--teal-dark);
+}
+.config-url {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.config-url input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--gold-light);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-family: 'Courier New', monospace;
+  background: var(--white);
+  outline: none;
+}
+.config-url input:focus { border-color: var(--teal-light); }
+
+/* ─── Demo Mode ─────────────────────────────────── */
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--amber-pale);
+  color: var(--amber);
+  border: 1px solid #f0c060;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Responsive ────────────────────────────────── */
+@media (max-width: 600px) {
+  .header { padding: 0 16px; }
+  .main { padding: 16px 12px 60px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .room-grid { grid-template-columns: 1fr 1fr; padding: 14px; }
+  .header-clock { display: none; }
+  .search-wrap input { width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─────────────────────────────────── -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-icon">🏥</div>
+    <div>
+      <div class="header-title">Chin Hsin <span>Healthy</span></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div>
+      <div class="header-time">Dashboard Layanan Kesehatan</div>
+      <div class="header-clock" id="clock"></div>
+    </div>
+    <span class="demo-badge" id="mode-badge">⚡ Demo</span>
+  </div>
+</header>
+
+<!-- ─── NAV TABS ───────────────────────────────── -->
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('overview')">📊 Overview</div>
+  <div class="nav-tab" onclick="switchTab('obat')">💊 Stok Obat</div>
+  <div class="nav-tab" onclick="switchTab('ruangan')">🛏 Ruangan & Bed</div>
+  <div class="nav-tab" onclick="switchTab('admin')">⚙️ Admin</div>
+</nav>
+
+<!-- ─── MAIN ───────────────────────────────────── -->
+<main class="main">
+
+  <!-- ── CONFIG BANNER ──────────────────────────── -->
+  <div class="config-banner" id="config-banner">
+    <div class="icon">🔗</div>
+    <div>
+      <p>
+        <strong>Hubungkan ke Google Spreadsheet.</strong><br>
+        Deploy Google Apps Script sebagai Web App, lalu masukkan URL-nya di sini.
+        Sheet diperlukan: <code>Obat</code> (Nama Obat | Stok | Satuan | Kategori)
+        dan <code>Ruangan</code> (No | Nama Ruangan | Status | Pengguna | Catatan).
+      </p>
+      <div class="config-url">
+        <input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/XXXX.../exec"/>
+        <button class="btn btn-primary btn-sm" onclick="saveUrl()">💾 Simpan & Muat</button>
+        <button class="btn btn-ghost btn-sm" onclick="useDemoMode()">🎭 Mode Demo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: OVERVIEW
+  ══════════════════════════════════════════════ -->
+  <section class="section active" id="section-overview">
+    <p class="page-title">Selamat Datang 👋</p>
+    <p class="page-subtitle">Ringkasan kondisi klinik Chin Hsin Healthy hari ini.</p>
+
+    <div class="stats-row">
+      <div class="stat-card teal">
+        <div class="stat-label">Total Jenis Obat</div>
+        <div class="stat-value" id="stat-total-obat">—</div>
+        <div class="stat-sub">jenis tersedia</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Stok Kritis</div>
+        <div class="stat-value" id="stat-kritis">—</div>
+        <div class="stat-sub">obat stok ≤ 10</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Ruangan Kosong</div>
+        <div class="stat-value" id="stat-kosong">—</div>
+        <div class="stat-sub">siap digunakan</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Ruangan Terisi</div>
+        <div class="stat-value" id="stat-terisi">—</div>
+        <div class="stat-sub">sedang digunakan</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚠️ Obat Stok Kritis</div>
+        <span class="badge badge-red" id="badge-kritis-count">—</span>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table id="tbl-kritis">
+            <thead><tr><th>Nama Obat</th><th>Kategori</th><th>Stok</th><th>Satuan</th></tr></thead>
+            <tbody id="tbody-kritis">
+              <tr><td colspan="4" class="loading-overlay"><div class="spinner"></div><span>Memuat data...</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🛏 Status Ruangan Terkini</div>
+        <span id="last-update" style="font-size:0.78rem;color:var(--ink-light)">—</span>
+      </div>
+      <div class="card-body">
+        <div class="room-grid" id="room-grid-overview"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: STOK OBAT
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="section-obat">
+    <p class="page-title">💊 Stok Obat</p>
+    <p class="page-subtitle">Informasi ketersediaan obat di klinik.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Daftar Obat</div>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-obat" placeholder="Cari obat..." oninput="filterObat()"/>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nama Obat</th>
+                <th>Kategori</th>
+                <th>Stok</th>
+                <th>Satuan</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-obat">
+              <tr><td colspan="6"><div class="loading-overlay"><div class="spinner"></div><span>Memuat...</span></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: RUANGAN & BED
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="section-ruangan">
+    <p class="page-title">🛏 Ruangan & Bed</p>
+    <p class="page-subtitle">Status penggunaan ruangan dan bed di klinik.</p>
+
+    <div class="stats-row" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="stat-card green">
+        <div class="stat-label">Kosong</div>
+        <div class="stat-value" id="r-kosong">—</div>
+        <div class="stat-sub">ruangan tersedia</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Terisi</div>
+        <div class="stat-value" id="r-terisi">—</div>
+        <div class="stat-sub">sedang digunakan</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Maintenance</div>
+        <div class="stat-value" id="r-maintenance">—</div>
+        <div class="stat-sub">dalam perawatan</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Peta Ruangan</div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <span class="badge badge-green">🟢 Kosong</span>
+          <span class="badge badge-red">🔴 Terisi</span>
+          <span class="badge badge-amber">🟡 Maintenance</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="room-grid" id="room-grid-main"></div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">Detail Ruangan</div></div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>No</th><th>Nama Ruangan</th><th>Status</th><th>Pengguna</th><th>Catatan</th></tr>
+            </thead>
+            <tbody id="tbody-ruangan">
+              <tr><td colspan="5"><div class="loading-overlay"><div class="spinner"></div><span>Memuat...</span></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: ADMIN
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="section-admin">
+
+    <!-- LOGIN GATE -->
+    <div class="admin-gate" id="admin-gate">
+      <div class="login-card">
+        <div class="login-card-top">
+          <div class="login-lock-icon">🔐</div>
+          <h2>Akses Admin</h2>
+          <p>Masukkan password untuk melanjutkan</p>
+        </div>
+        <div class="login-card-body">
+          <div class="login-error" id="login-error">
+            <span>⚠️</span><span id="login-error-msg">Password salah. Coba lagi.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="pw-input-wrap">
+              <input type="password" class="form-control" id="admin-password-input"
+                     placeholder="Masukkan password admin"
+                     onkeydown="if(event.key==='Enter')submitLogin()"/>
+              <button class="pw-toggle" onclick="togglePwVisibility()" title="Tampilkan/Sembunyikan">👁</button>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="submitLogin()" style="width:100%;margin-top:4px" id="login-btn">
+            🔓 Masuk Panel Admin
+          </button>
+          <div class="login-attempts" id="login-attempts"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL (hidden until logged in) -->
+    <div id="admin-panel" style="display:none">
+      <div class="admin-panel-header">
+        <div>
+          <p class="page-title">⚙️ Panel Admin</p>
+          <p class="page-subtitle">Kelola stok obat dan status ruangan/bed.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <div class="admin-user-info">
+            <span class="dot"></span>
+            <span>Login sebagai <strong>Admin</strong></span>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="adminLogout()">🚪 Keluar</button>
+        </div>
+      </div>
+
+    <div class="admin-grid">
+
+      <!-- Update Stok Obat -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">💊 Update Stok Obat</div></div>
+        <div class="card-body" style="padding:20px">
+          <div class="form-group">
+            <label class="form-label">Pilih Obat</label>
+            <select class="form-control" id="admin-select-obat" onchange="fillObatForm()">
+              <option value="">— Pilih obat —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jumlah Stok Baru</label>
+            <input type="number" class="form-control" id="admin-stok-baru" min="0" placeholder="Masukkan jumlah stok"/>
+          </div>
+          <button class="btn btn-primary" onclick="submitUpdateObat()" style="width:100%">💾 Simpan Perubahan</button>
+        </div>
+      </div>
+
+      <!-- Tambah Obat Baru -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">➕ Tambah Obat Baru</div></div>
+        <div class="card-body" style="padding:20px">
+          <div class="form-group">
+            <label class="form-label">Nama Obat</label>
+            <input type="text" class="form-control" id="new-obat-nama" placeholder="Nama obat"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Stok Awal</label>
+              <input type="number" class="form-control" id="new-obat-stok" min="0" placeholder="0"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Satuan</label>
+              <select class="form-control" id="new-obat-satuan">
+                <option>pcs</option><option>strip</option><option>botol</option>
+                <option>tablet</option><option>kapsul</option><option>ampul</option>
+                <option>vial</option><option>sachet</option><option>tube</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kategori</label>
+            <select class="form-control" id="new-obat-kategori">
+              <option>Umum</option><option>Antibiotik</option><option>Analgesik</option>
+              <option>Antihistamin</option><option>Vitamin</option><option>Kardiovaskular</option>
+              <option>Dermatologi</option><option>Gastrointestinal</option><option>Lainnya</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" onclick="submitTambahObat()" style="width:100%">✨ Tambah Obat</button>
+        </div>
+      </div>
+
+      <!-- Update Status Ruangan -->
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header"><div class="card-title">🛏 Update Status Ruangan / Bed</div></div>
+        <div class="card-body" style="padding:20px">
+          <div class="form-row" style="flex-wrap:wrap;">
+            <div class="form-group" style="flex:1;min-width:160px;">
+              <label class="form-label">Pilih Ruangan</label>
+              <select class="form-control" id="admin-select-ruangan" onchange="fillRuanganForm()">
+                <option value="">— Pilih ruangan —</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:1;min-width:140px;">
+              <label class="form-label">Status</label>
+              <select class="form-control" id="admin-status-ruangan">
+                <option value="Kosong">🟢 Kosong</option>
+                <option value="Terisi">🔴 Terisi</option>
+                <option value="Maintenance">🟡 Maintenance</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:2;min-width:180px;">
+              <label class="form-label">Nama Pengguna / Pasien</label>
+              <input type="text" class="form-control" id="admin-pengguna-ruangan" placeholder="Nama pengguna / kosongkan jika tidak ada"/>
+            </div>
+            <div class="form-group" style="flex:2;min-width:180px;">
+              <label class="form-label">Catatan</label>
+              <input type="text" class="form-control" id="admin-catatan-ruangan" placeholder="Catatan tambahan (opsional)"/>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="submitUpdateRuangan()" style="min-width:180px">💾 Simpan Status</button>
+        </div>
+      </div>
+
+      <!-- Tambah Ruangan Baru -->
+      <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header"><div class="card-title">🏥 Tambah Ruangan Baru</div></div>
+        <div class="card-body" style="padding:20px">
+          <div class="form-row" style="flex-wrap:wrap;">
+            <div class="form-group" style="flex:2;min-width:180px;">
+              <label class="form-label">Nama Ruangan</label>
+              <input type="text" class="form-control" id="new-ruangan-nama" placeholder="cth: Ruang Periksa 4, Bed B3..."/>
+            </div>
+            <div class="form-group" style="flex:1;min-width:140px;">
+              <label class="form-label">Status Awal</label>
+              <select class="form-control" id="new-ruangan-status">
+                <option value="Kosong">🟢 Kosong</option>
+                <option value="Terisi">🔴 Terisi</option>
+                <option value="Maintenance">🟡 Maintenance</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:2;min-width:180px;">
+              <label class="form-label">Pengguna (opsional)</label>
+              <input type="text" class="form-control" id="new-ruangan-pengguna" placeholder="Nama pasien / pengguna"/>
+            </div>
+            <div class="form-group" style="flex:2;min-width:180px;">
+              <label class="form-label">Catatan (opsional)</label>
+              <input type="text" class="form-control" id="new-ruangan-catatan" placeholder="Catatan tambahan"/>
+            </div>
+          </div>
+          <button class="btn btn-gold" onclick="submitTambahRuangan()" style="min-width:180px">✨ Tambah Ruangan</button>
+        </div>
+      </div>
+
+    </div><!-- /admin-grid -->
+
+    <!-- Admin Table: Obat -->
+    <div class="card" style="margin-top:8px">
+      <div class="card-header">
+        <div class="card-title">Daftar Obat (Edit / Hapus)</div>
+        <button class="btn btn-danger btn-sm" onclick="confirmHapusSemua('obat')">🗑 Hapus Semua Obat</button>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Nama Obat</th><th>Kategori</th><th>Stok</th><th>Satuan</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-admin-obat"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Table: Ruangan -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Daftar Ruangan (Edit / Hapus)</div>
+        <button class="btn btn-danger btn-sm" onclick="confirmHapusSemua('ruangan')">🗑 Hapus Semua Ruangan</button>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>No</th><th>Nama Ruangan</th><th>Status</th><th>Pengguna</th><th>Catatan</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-admin-ruangan"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /admin-panel -->
+  </section>
+</main>
+
+<!-- ─── MODAL EDIT OBAT ────────────────────────── -->
+<div class="modal-overlay" id="modal-obat" style="display:none" onclick="if(event.target===this)closeModal('modal-obat')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Stok Obat</div>
+      <button class="modal-close" onclick="closeModal('modal-obat')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nama Obat</label>
+        <input type="text" class="form-control" id="m-obat-nama" disabled/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stok Sekarang</label>
+          <input type="number" class="form-control" id="m-obat-stok" min="0"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Satuan</label>
+          <input type="text" class="form-control" id="m-obat-satuan" disabled/>
+        </div>
+      </div>
+      <input type="hidden" id="m-obat-rowIndex"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-obat')">Batal</button>
+      <button class="btn btn-primary" onclick="saveModalObat()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MODAL EDIT RUANGAN ─────────────────────── -->
+<div class="modal-overlay" id="modal-ruangan" style="display:none" onclick="if(event.target===this)closeModal('modal-ruangan')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Status Ruangan</div>
+      <button class="modal-close" onclick="closeModal('modal-ruangan')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nama Ruangan</label>
+        <input type="text" class="form-control" id="m-ruangan-nama" disabled/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-control" id="m-ruangan-status">
+          <option value="Kosong">🟢 Kosong</option>
+          <option value="Terisi">🔴 Terisi</option>
+          <option value="Maintenance">🟡 Maintenance</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pengguna / Pasien</label>
+        <input type="text" class="form-control" id="m-ruangan-pengguna" placeholder="Nama pengguna"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catatan</label>
+        <input type="text" class="form-control" id="m-ruangan-catatan" placeholder="Catatan (opsional)"/>
+      </div>
+      <input type="hidden" id="m-ruangan-rowIndex"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-ruangan')">Batal</button>
+      <button class="btn btn-primary" onclick="saveModalRuangan()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MODAL KONFIRMASI HAPUS ─────────────────── -->
+<div class="modal-overlay" id="modal-confirm" style="display:none" onclick="if(event.target===this)closeModal('modal-confirm')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="confirm-title">Konfirmasi Hapus</div>
+      <button class="modal-close" onclick="closeModal('modal-confirm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:10px 0 20px">
+        <div style="font-size:48px;margin-bottom:12px">🗑️</div>
+        <p id="confirm-msg" style="font-size:0.93rem;color:var(--ink-mid);line-height:1.6"></p>
+        <p style="font-size:0.8rem;color:var(--red);margin-top:10px;font-weight:600">Tindakan ini tidak dapat dibatalkan.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Batal</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST CONTAINER ────────────────────────── -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ─── JAVASCRIPT ─────────────────────────────── -->
+<script>
+// ── State ────────────────────────────────────────
+let allObat    = [];
+let allRuangan = [];
+let appsScriptUrl = localStorage.getItem('chs_url') || '';
+let isDemoMode = false;
+
+// ── Demo Data ────────────────────────────────────
+const DEMO_OBAT = [
+  { rowIndex:2, nama:'Paracetamol 500mg', stok:150, satuan:'tablet',  kategori:'Analgesik' },
+  { rowIndex:3, nama:'Amoxicillin 500mg',  stok:8,   satuan:'kapsul', kategori:'Antibiotik' },
+  { rowIndex:4, nama:'Omeprazole 20mg',    stok:60,  satuan:'kapsul', kategori:'Gastrointestinal' },
+  { rowIndex:5, nama:'Cetirizine 10mg',    stok:5,   satuan:'tablet', kategori:'Antihistamin' },
+  { rowIndex:6, nama:'Vitamin C 500mg',    stok:200, satuan:'tablet', kategori:'Vitamin' },
+  { rowIndex:7, nama:'Ibuprofen 400mg',    stok:45,  satuan:'tablet', kategori:'Analgesik' },
+  { rowIndex:8, nama:'Metformin 500mg',    stok:3,   satuan:'tablet', kategori:'Kardiovaskular' },
+  { rowIndex:9, nama:'Betahistine 16mg',   stok:30,  satuan:'tablet', kategori:'Umum' },
+  { rowIndex:10,nama:'Salep Kulit 2.5%',  stok:12,  satuan:'tube',   kategori:'Dermatologi' },
+  { rowIndex:11,nama:'ORS Rehidrasi',      stok:80,  satuan:'sachet', kategori:'Umum' },
+];
+const DEMO_RUANGAN = [
+  { rowIndex:2, no:1, nama:'Ruang Periksa 1',  status:'Terisi',      pengguna:'Budi Santoso',    catatan:'Konsultasi umum' },
+  { rowIndex:3, no:2, nama:'Ruang Periksa 2',  status:'Kosong',      pengguna:'-',               catatan:'' },
+  { rowIndex:4, no:3, nama:'Ruang Periksa 3',  status:'Kosong',      pengguna:'-',               catatan:'' },
+  { rowIndex:5, no:4, nama:'Bed Rawat Inap A1', status:'Terisi',      pengguna:'Siti Rahayu',     catatan:'Observasi 24 jam' },
+  { rowIndex:6, no:5, nama:'Bed Rawat Inap A2', status:'Terisi',      pengguna:'Ahmad Fauzi',     catatan:'Post-operasi' },
+  { rowIndex:7, no:6, nama:'Bed Rawat Inap A3', status:'Kosong',      pengguna:'-',               catatan:'' },
+  { rowIndex:8, no:7, nama:'Bed Rawat Inap B1', status:'Maintenance', pengguna:'-',               catatan:'Perbaikan AC' },
+  { rowIndex:9, no:8, nama:'Ruang Tindakan',    status:'Kosong',      pengguna:'-',               catatan:'' },
+  { rowIndex:10,no:9, nama:'Ruang IGD',         status:'Terisi',      pengguna:'Dewi Lestari',    catatan:'Keadaan darurat' },
+  { rowIndex:11,no:10,nama:'Ruang Obat',        status:'Kosong',      pengguna:'-',               catatan:'' },
+];
+
+// ── Clock ─────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
+    + ' — ' + now.toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── Tab Switching ─────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    const tabs = ['overview','obat','ruangan','admin'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.toggle('active', s.id === 'section-' + tab);
+  });
+  // Re-check admin gate every time the tab is opened
+  if (tab === 'admin') {
+    if (getAdminGateState() === 'open') showAdminPanel();
+    else { showAdminGate(); updateAttemptsUI(); }
+  }
+}
+
+// ── URL Config ────────────────────────────────────
+function saveUrl() {
+  const url = document.getElementById('apps-script-url').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    showToast('URL tidak valid. Gunakan URL Apps Script yang benar.', 'error'); return;
+  }
+  appsScriptUrl = url;
+  localStorage.setItem('chs_url', url);
+  isDemoMode = false;
+  document.getElementById('mode-badge').textContent = '🟢 Live';
+  document.getElementById('mode-badge').style.background = 'var(--green-pale)';
+  document.getElementById('mode-badge').style.color = 'var(--green)';
+  document.getElementById('config-banner').style.display = 'none';
+  showToast('URL tersimpan! Memuat data...', 'success');
+  loadData();
+}
+
+function useDemoMode() {
+  isDemoMode = true;
+  document.getElementById('config-banner').style.display = 'none';
+  document.getElementById('mode-badge').textContent = '🎭 Demo';
+  allObat    = JSON.parse(JSON.stringify(DEMO_OBAT));
+  allRuangan = JSON.parse(JSON.stringify(DEMO_RUANGAN));
+  renderAll();
+  showToast('Mode Demo aktif. Data tidak tersimpan ke Spreadsheet.', '');
+}
+
+// ── Load Data ─────────────────────────────────────
+async function loadData() {
+  if (isDemoMode) { renderAll(); return; }
+  if (!appsScriptUrl) return;
+  try {
+    const res  = await fetch(appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getAll' })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    allObat    = data.obat;
+    allRuangan = data.ruangan;
+    const ts   = new Date(data.updatedAt);
+    document.getElementById('last-update').textContent =
+      'Update: ' + ts.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    renderAll();
+  } catch (e) {
+    showToast('Gagal memuat data: ' + e.message, 'error');
+  }
+}
+
+// ── Render All ────────────────────────────────────
+function renderAll() {
+  renderStatsOverview();
+  renderKritis();
+  renderRoomGridOverview();
+  renderObatTable();
+  renderRuanganTable();
+  renderRuanganGrid();
+  renderAdminObat();
+  renderAdminRuangan();
+  populateSelects();
+  updateRuanganStats();
+}
+
+// ── Stats Overview ────────────────────────────────
+function renderStatsOverview() {
+  const kritis = allObat.filter(o => o.stok <= 10);
+  const kosong  = allRuangan.filter(r => r.status === 'Kosong');
+  const terisi  = allRuangan.filter(r => r.status === 'Terisi');
+  document.getElementById('stat-total-obat').textContent = allObat.length;
+  document.getElementById('stat-kritis').textContent     = kritis.length;
+  document.getElementById('stat-kosong').textContent     = kosong.length;
+  document.getElementById('stat-terisi').textContent     = terisi.length;
+  document.getElementById('badge-kritis-count').textContent = kritis.length + ' obat';
+}
+
+// ── Kritis Table ──────────────────────────────────
+function renderKritis() {
+  const tbody = document.getElementById('tbody-kritis');
+  const kritis = allObat.filter(o => o.stok <= 10);
+  if (!kritis.length) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:28px;color:var(--ink-light)">
+      ✅ Tidak ada obat dengan stok kritis saat ini.
+    </td></tr>`; return;
+  }
+  tbody.innerHTML = kritis.map(o => `
+    <tr>
+      <td class="td-name">${o.nama}</td>
+      <td>${badgeKategori(o.kategori)}</td>
+      <td><span style="font-weight:700;color:var(--red)">${o.stok}</span></td>
+      <td>${o.satuan}</td>
+    </tr>`).join('');
+}
+
+// ── Room Grid ─────────────────────────────────────
+function renderRoomGridOverview() {
+  renderRoomGrid('room-grid-overview', allRuangan.slice(0, 8));
+}
+function renderRuanganGrid() {
+  renderRoomGrid('room-grid-main', allRuangan);
+}
+function renderRoomGrid(id, data) {
+  const el = document.getElementById(id);
+  if (!data.length) { el.innerHTML = '<p style="padding:20px;color:var(--ink-light)">Tidak ada data ruangan.</p>'; return; }
+  el.innerHTML = data.map(r => {
+    const cls = r.status === 'Terisi' ? 'terisi' : r.status === 'Maintenance' ? 'maintenance' : 'kosong';
+    const icon = r.status === 'Terisi' ? '🛏' : r.status === 'Maintenance' ? '🔧' : '✅';
+    const badge = r.status === 'Terisi'
+      ? '<span class="badge badge-red">🔴 Terisi</span>'
+      : r.status === 'Maintenance'
+      ? '<span class="badge badge-amber">🟡 Maintenance</span>'
+      : '<span class="badge badge-green">🟢 Kosong</span>';
+    return `
+      <div class="room-card ${cls}" data-icon="${icon}">
+        <div class="room-no">Ruangan ${r.no}</div>
+        <div class="room-name">${r.nama}</div>
+        ${badge}
+        <div class="room-user">👤 ${r.pengguna}</div>
+        ${r.catatan ? `<div class="room-note">${r.catatan}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── Obat Table ────────────────────────────────────
+function renderObatTable(filter='') {
+  const tbody  = document.getElementById('tbody-obat');
+  const data   = filter
+    ? allObat.filter(o => o.nama.toLowerCase().includes(filter.toLowerCase()) || o.kategori.toLowerCase().includes(filter.toLowerCase()))
+    : allObat;
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--ink-light)">Tidak ada data obat.</td></tr>`; return;
+  }
+  const maxStok = Math.max(...allObat.map(o => o.stok), 1);
+  tbody.innerHTML = data.map((o, i) => {
+    const pct   = Math.round((o.stok / maxStok) * 100);
+    const color = o.stok <= 10 ? 'var(--red)' : o.stok <= 30 ? 'var(--amber)' : 'var(--teal)';
+    const sBadge = o.stok <= 10
+      ? '<span class="badge badge-red">⚠️ Kritis</span>'
+      : o.stok <= 30
+      ? '<span class="badge badge-amber">📉 Rendah</span>'
+      : '<span class="badge badge-green">✅ Aman</span>';
+    return `
+      <tr>
+        <td style="color:var(--ink-light)">${i+1}</td>
+        <td class="td-name">${o.nama}</td>
+        <td>${badgeKategori(o.kategori)}</td>
+        <td>
+          <div class="stock-bar-wrap">
+            <div class="stock-bar">
+              <div class="stock-bar-fill" style="width:${pct}%;background:${color}"></div>
+            </div>
+            <span class="stock-num">${o.stok}</span>
+          </div>
+        </td>
+        <td>${o.satuan}</td>
+        <td>${sBadge}</td>
+      </tr>`;
+  }).join('');
+}
+
+function filterObat() {
+  renderObatTable(document.getElementById('search-obat').value);
+}
+
+// ── Ruangan Table ─────────────────────────────────
+function renderRuanganTable() {
+  const tbody = document.getElementById('tbody-ruangan');
+  if (!allRuangan.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--ink-light)">Tidak ada data ruangan.</td></tr>`; return;
+  }
+  tbody.innerHTML = allRuangan.map(r => {
+    const badge = r.status === 'Terisi'
+      ? '<span class="badge badge-red">🔴 Terisi</span>'
+      : r.status === 'Maintenance'
+      ? '<span class="badge badge-amber">🟡 Maintenance</span>'
+      : '<span class="badge badge-green">🟢 Kosong</span>';
+    return `
+      <tr>
+        <td>${r.no}</td>
+        <td class="td-name">${r.nama}</td>
+        <td>${badge}</td>
+        <td>${r.pengguna}</td>
+        <td style="color:var(--ink-light);font-style:italic">${r.catatan || '—'}</td>
+      </tr>`;
+  }).join('');
+}
+
+// ── Ruangan Stats ─────────────────────────────────
+function updateRuanganStats() {
+  document.getElementById('r-kosong').textContent     = allRuangan.filter(r => r.status === 'Kosong').length;
+  document.getElementById('r-terisi').textContent     = allRuangan.filter(r => r.status === 'Terisi').length;
+  document.getElementById('r-maintenance').textContent= allRuangan.filter(r => r.status === 'Maintenance').length;
+}
+
+// ── Admin Tables ──────────────────────────────────
+function renderAdminObat() {
+  const tbody = document.getElementById('tbody-admin-obat');
+  if (!allObat.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--ink-light)">Belum ada data obat.</td></tr>`; return;
+  }
+  tbody.innerHTML = allObat.map((o, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td class="td-name">${o.nama}</td>
+      <td>${badgeKategori(o.kategori)}</td>
+      <td><strong>${o.stok}</strong></td>
+      <td>${o.satuan}</td>
+      <td style="display:flex;gap:6px">
+        <button class="edit-btn" onclick="openEditObat(${i})">✏️ Edit</button>
+        <button class="edit-btn" style="background:var(--red-pale);color:var(--red)" onclick="confirmHapusObat(${i})">🗑 Hapus</button>
+      </td>
+    </tr>`).join('');
+}
+function renderAdminRuangan() {
+  const tbody = document.getElementById('tbody-admin-ruangan');
+  if (!allRuangan.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--ink-light)">Belum ada data ruangan.</td></tr>`; return;
+  }
+  tbody.innerHTML = allRuangan.map((r, i) => {
+    const badge = r.status === 'Terisi'
+      ? '<span class="badge badge-red">🔴 Terisi</span>'
+      : r.status === 'Maintenance'
+      ? '<span class="badge badge-amber">🟡 Maintenance</span>'
+      : '<span class="badge badge-green">🟢 Kosong</span>';
+    return `
+      <tr>
+        <td>${r.no}</td>
+        <td class="td-name">${r.nama}</td>
+        <td>${badge}</td>
+        <td>${r.pengguna}</td>
+        <td>${r.catatan || '—'}</td>
+        <td style="display:flex;gap:6px">
+          <button class="edit-btn" onclick="openEditRuangan(${i})">✏️ Edit</button>
+          <button class="edit-btn" style="background:var(--red-pale);color:var(--red)" onclick="confirmHapusRuangan(${i})">🗑 Hapus</button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ── Confirm Delete Helpers ────────────────────────
+function showConfirm(title, msg, onOk) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent   = msg;
+  const btn = document.getElementById('confirm-ok-btn');
+  btn.onclick = () => { closeModal('modal-confirm'); onOk(); };
+  document.getElementById('modal-confirm').style.display = 'flex';
+}
+
+function confirmHapusObat(i) {
+  showConfirm('Hapus Obat', `Hapus "${allObat[i].nama}" dari daftar obat?`, () => hapusObat(i));
+}
+function confirmHapusRuangan(i) {
+  showConfirm('Hapus Ruangan', `Hapus "${allRuangan[i].nama}" dari daftar ruangan?`, () => hapusRuangan(i));
+}
+function confirmHapusSemua(tipe) {
+  if (tipe === 'obat') {
+    showConfirm('Hapus Semua Obat', `Ini akan menghapus semua ${allObat.length} data obat dari daftar. Lanjutkan?`, hapusSemua.bind(null, 'obat'));
+  } else {
+    showConfirm('Hapus Semua Ruangan', `Ini akan menghapus semua ${allRuangan.length} data ruangan. Lanjutkan?`, hapusSemua.bind(null, 'ruangan'));
+  }
+}
+
+// ── Delete Functions ──────────────────────────────
+async function hapusObat(i) {
+  const nama = allObat[i].nama;
+  await apiCall('deleteObat', { rowIndex: allObat[i].rowIndex }, () => {
+    allObat.splice(i, 1);
+    // Recalculate rowIndex for demo mode consistency
+    allObat.forEach((o, idx) => o.rowIndex = idx + 2);
+    renderAll();
+    showToast(`Obat "${nama}" berhasil dihapus.`, 'success');
+  });
+}
+
+async function hapusRuangan(i) {
+  const nama = allRuangan[i].nama;
+  await apiCall('deleteRuangan', { rowIndex: allRuangan[i].rowIndex }, () => {
+    allRuangan.splice(i, 1);
+    // Renumber
+    allRuangan.forEach((r, idx) => { r.no = idx + 1; r.rowIndex = idx + 2; });
+    renderAll();
+    showToast(`Ruangan "${nama}" berhasil dihapus.`, 'success');
+  });
+}
+
+async function hapusSemua(tipe) {
+  await apiCall('deleteAll', { tipe }, () => {
+    if (tipe === 'obat') { allObat = []; showToast('Semua data obat telah dihapus.', 'success'); }
+    else { allRuangan = []; showToast('Semua data ruangan telah dihapus.', 'success'); }
+    renderAll();
+  });
+}
+
+// ── Add Room ──────────────────────────────────────
+async function submitTambahRuangan() {
+  const nama     = document.getElementById('new-ruangan-nama').value.trim();
+  const status   = document.getElementById('new-ruangan-status').value;
+  const pengguna = document.getElementById('new-ruangan-pengguna').value.trim() || '-';
+  const catatan  = document.getElementById('new-ruangan-catatan').value.trim();
+  if (!nama) { showToast('Nama ruangan tidak boleh kosong.', 'error'); return; }
+  const noUrutan = allRuangan.length + 1;
+  await apiCall('addRuangan', { no: noUrutan, nama, status, pengguna, catatan }, () => {
+    allRuangan.push({ rowIndex: allRuangan.length + 2, no: noUrutan, nama, status, pengguna, catatan });
+    renderAll();
+    ['new-ruangan-nama','new-ruangan-pengguna','new-ruangan-catatan'].forEach(id => document.getElementById(id).value = '');
+    showToast(`Ruangan "${nama}" berhasil ditambahkan.`, 'success');
+  });
+}
+
+// ── Populate Selects ──────────────────────────────
+function populateSelects() {
+  const selObat = document.getElementById('admin-select-obat');
+  const curObat = selObat.value;
+  selObat.innerHTML = '<option value="">— Pilih obat —</option>' +
+    allObat.map((o,i) => `<option value="${i}">${o.nama} (Stok: ${o.stok})</option>`).join('');
+  selObat.value = curObat;
+
+  const selRuangan = document.getElementById('admin-select-ruangan');
+  const curRuangan = selRuangan.value;
+  selRuangan.innerHTML = '<option value="">— Pilih ruangan —</option>' +
+    allRuangan.map((r,i) => `<option value="${i}">${r.no}. ${r.nama}</option>`).join('');
+  selRuangan.value = curRuangan;
+}
+
+function fillObatForm() {
+  const idx = document.getElementById('admin-select-obat').value;
+  if (idx === '') return;
+  document.getElementById('admin-stok-baru').value = allObat[idx].stok;
+}
+function fillRuanganForm() {
+  const idx = document.getElementById('admin-select-ruangan').value;
+  if (idx === '') return;
+  const r = allRuangan[idx];
+  document.getElementById('admin-status-ruangan').value   = r.status;
+  document.getElementById('admin-pengguna-ruangan').value = r.pengguna === '-' ? '' : r.pengguna;
+  document.getElementById('admin-catatan-ruangan').value  = r.catatan;
+}
+
+// ── Submit Admin Obat ─────────────────────────────
+async function submitUpdateObat() {
+  const idx  = document.getElementById('admin-select-obat').value;
+  const stok = parseInt(document.getElementById('admin-stok-baru').value);
+  if (idx === '' || isNaN(stok)) { showToast('Pilih obat dan masukkan stok valid.', 'error'); return; }
+  const obat = allObat[idx];
+  await apiCall('updateObat', { rowIndex: obat.rowIndex, stok }, () => {
+    allObat[idx].stok = stok;
+    renderAll();
+    showToast(`Stok ${obat.nama} diperbarui ke ${stok} ${obat.satuan}.`, 'success');
+  });
+}
+
+async function submitTambahObat() {
+  const nama     = document.getElementById('new-obat-nama').value.trim();
+  const stok     = parseInt(document.getElementById('new-obat-stok').value);
+  const satuan   = document.getElementById('new-obat-satuan').value;
+  const kategori = document.getElementById('new-obat-kategori').value;
+  if (!nama || isNaN(stok)) { showToast('Isi nama obat dan stok awal.', 'error'); return; }
+  await apiCall('addObat', { nama, stok, satuan, kategori }, () => {
+    allObat.push({ rowIndex: allObat.length + 2, nama, stok, satuan, kategori });
+    renderAll();
+    ['new-obat-nama','new-obat-stok'].forEach(id => document.getElementById(id).value = '');
+    showToast(`Obat ${nama} ditambahkan.`, 'success');
+  });
+}
+
+// ── Submit Admin Ruangan ──────────────────────────
+async function submitUpdateRuangan() {
+  const idx      = document.getElementById('admin-select-ruangan').value;
+  const status   = document.getElementById('admin-status-ruangan').value;
+  const pengguna = document.getElementById('admin-pengguna-ruangan').value.trim() || '-';
+  const catatan  = document.getElementById('admin-catatan-ruangan').value.trim();
+  if (idx === '') { showToast('Pilih ruangan terlebih dahulu.', 'error'); return; }
+  const ruangan = allRuangan[idx];
+  await apiCall('updateRuangan', { rowIndex: ruangan.rowIndex, status, pengguna, catatan }, () => {
+    allRuangan[idx] = { ...ruangan, status, pengguna, catatan };
+    renderAll();
+    showToast(`Status ${ruangan.nama} diperbarui.`, 'success');
+  });
+}
+
+// ── Modal: Edit Obat ──────────────────────────────
+function openEditObat(i) {
+  const o = allObat[i];
+  document.getElementById('m-obat-nama').value     = o.nama;
+  document.getElementById('m-obat-stok').value     = o.stok;
+  document.getElementById('m-obat-satuan').value   = o.satuan;
+  document.getElementById('m-obat-rowIndex').value = i;
+  document.getElementById('modal-obat').style.display = 'flex';
+}
+async function saveModalObat() {
+  const i    = parseInt(document.getElementById('m-obat-rowIndex').value);
+  const stok = parseInt(document.getElementById('m-obat-stok').value);
+  if (isNaN(stok)) { showToast('Stok tidak valid.', 'error'); return; }
+  const obat = allObat[i];
+  await apiCall('updateObat', { rowIndex: obat.rowIndex, stok }, () => {
+    allObat[i].stok = stok;
+    renderAll();
+    closeModal('modal-obat');
+    showToast(`Stok ${obat.nama} diperbarui.`, 'success');
+  });
+}
+
+// ── Modal: Edit Ruangan ───────────────────────────
+function openEditRuangan(i) {
+  const r = allRuangan[i];
+  document.getElementById('m-ruangan-nama').value     = r.nama;
+  document.getElementById('m-ruangan-status').value   = r.status;
+  document.getElementById('m-ruangan-pengguna').value = r.pengguna === '-' ? '' : r.pengguna;
+  document.getElementById('m-ruangan-catatan').value  = r.catatan;
+  document.getElementById('m-ruangan-rowIndex').value = i;
+  document.getElementById('modal-ruangan').style.display = 'flex';
+}
+async function saveModalRuangan() {
+  const i        = parseInt(document.getElementById('m-ruangan-rowIndex').value);
+  const status   = document.getElementById('m-ruangan-status').value;
+  const pengguna = document.getElementById('m-ruangan-pengguna').value.trim() || '-';
+  const catatan  = document.getElementById('m-ruangan-catatan').value.trim();
+  const ruangan  = allRuangan[i];
+  await apiCall('updateRuangan', { rowIndex: ruangan.rowIndex, status, pengguna, catatan }, () => {
+    allRuangan[i] = { ...ruangan, status, pengguna, catatan };
+    renderAll();
+    closeModal('modal-ruangan');
+    showToast(`Status ${ruangan.nama} diperbarui.`, 'success');
+  });
+}
+
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+// ── API Call Helper ───────────────────────────────
+async function apiCall(action, data, onSuccess) {
+  if (isDemoMode) { onSuccess(); return; }
+  if (!appsScriptUrl) { showToast('URL Apps Script belum dikonfigurasi.', 'error'); return; }
+  try {
+    const res  = await fetch(appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify({ action, data })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    onSuccess();
+  } catch (e) {
+    showToast('Gagal: ' + e.message, 'error');
+  }
+}
+
+// ── Toast ─────────────────────────────────────────
+function showToast(msg, type = '') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+  t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.4s'; setTimeout(() => t.remove(), 400); }, 3500);
+}
+
+// ── Badge Helpers ─────────────────────────────────
+function badgeKategori(k) {
+  const map = {
+    'Antibiotik':'badge-red','Analgesik':'badge-teal','Antihistamin':'badge-amber',
+    'Vitamin':'badge-green','Kardiovaskular':'badge-red','Gastrointestinal':'badge-amber',
+    'Dermatologi':'badge-teal','Umum':'badge-gray','Lainnya':'badge-gray'
+  };
+  return `<span class="badge ${map[k]||'badge-gray'}">${k}</span>`;
+}
+
+// ── Admin Auth ────────────────────────────────────
+// Ganti password di sini (atau gunakan hash SHA-256 untuk keamanan lebih)
+const ADMIN_PASSWORD = 'chinHsin2024';
+const MAX_ATTEMPTS   = 5;
+const LOCKOUT_MS     = 5 * 60 * 1000; // 5 menit
+let loginAttempts    = parseInt(sessionStorage.getItem('chs_attempts') || '0');
+let isAdminLoggedIn  = sessionStorage.getItem('chs_auth') === 'true';
+
+function getAdminGateState() {
+  const locked   = sessionStorage.getItem('chs_locked');
+  if (locked && Date.now() < parseInt(locked)) return 'locked';
+  if (sessionStorage.getItem('chs_auth') === 'true') return 'open';
+  return 'gate';
+}
+
+function showAdminGate() {
+  document.getElementById('admin-gate').style.display  = 'flex';
+  document.getElementById('admin-panel').style.display = 'none';
+}
+function showAdminPanel() {
+  document.getElementById('admin-gate').style.display  = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+}
+
+function updateAttemptsUI() {
+  const el       = document.getElementById('login-attempts');
+  const locked   = sessionStorage.getItem('chs_locked');
+  if (locked && Date.now() < parseInt(locked)) {
+    const remaining = Math.ceil((parseInt(locked) - Date.now()) / 1000);
+    el.textContent  = `🔒 Terkunci. Coba lagi dalam ${remaining} detik.`;
+    el.className    = 'login-attempts warning';
+    document.getElementById('admin-password-input').disabled = true;
+    document.getElementById('login-btn').disabled = true;
+    // Countdown
+    const t = setInterval(() => {
+      const rem = Math.ceil((parseInt(locked) - Date.now()) / 1000);
+      if (rem <= 0) {
+        clearInterval(t);
+        sessionStorage.removeItem('chs_locked');
+        loginAttempts = 0;
+        sessionStorage.setItem('chs_attempts', '0');
+        el.textContent = '';
+        el.className   = 'login-attempts';
+        document.getElementById('admin-password-input').disabled = false;
+        document.getElementById('login-btn').disabled = false;
+      } else {
+        el.textContent = `🔒 Terkunci. Coba lagi dalam ${rem} detik.`;
+      }
+    }, 1000);
+    return;
+  }
+  const remaining = MAX_ATTEMPTS - loginAttempts;
+  if (loginAttempts > 0 && remaining > 0) {
+    el.textContent = `Sisa percobaan: ${remaining}`;
+    el.className   = remaining <= 2 ? 'login-attempts warning' : 'login-attempts';
+  } else {
+    el.textContent = '';
+    el.className   = 'login-attempts';
+  }
+}
+
+function submitLogin() {
+  const locked = sessionStorage.getItem('chs_locked');
+  if (locked && Date.now() < parseInt(locked)) return;
+
+  const input = document.getElementById('admin-password-input');
+  const errEl = document.getElementById('login-error');
+  const errMsg= document.getElementById('login-error-msg');
+
+  if (input.value === ADMIN_PASSWORD) {
+    // Success
+    sessionStorage.setItem('chs_auth', 'true');
+    sessionStorage.setItem('chs_attempts', '0');
+    loginAttempts = 0;
+    errEl.classList.remove('visible');
+    input.value = '';
+    showAdminPanel();
+    showToast('Login berhasil. Selamat datang, Admin!', 'success');
+  } else {
+    // Failure
+    loginAttempts++;
+    sessionStorage.setItem('chs_attempts', loginAttempts);
+    input.value = '';
+
+    if (loginAttempts >= MAX_ATTEMPTS) {
+      const lockUntil = Date.now() + LOCKOUT_MS;
+      sessionStorage.setItem('chs_locked', lockUntil);
+      errMsg.textContent = `Terlalu banyak percobaan. Akses dikunci 5 menit.`;
+    } else {
+      errMsg.textContent = `Password salah. Sisa percobaan: ${MAX_ATTEMPTS - loginAttempts}.`;
+    }
+    errEl.classList.add('visible');
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 500);
+    updateAttemptsUI();
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('chs_auth');
+  isAdminLoggedIn = false;
+  showAdminGate();
+  document.getElementById('admin-password-input').value = '';
+  document.getElementById('login-error').classList.remove('visible');
+  showToast('Anda telah keluar dari panel admin.', '');
+}
+
+function togglePwVisibility() {
+  const input = document.getElementById('admin-password-input');
+  const btn   = document.querySelector('.pw-toggle');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁'; }
+}
+
+// ── Init ──────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (appsScriptUrl) {
+    document.getElementById('apps-script-url').value = appsScriptUrl;
+    document.getElementById('mode-badge').textContent = '🟢 Live';
+    document.getElementById('mode-badge').style.background = 'var(--green-pale)';
+    document.getElementById('mode-badge').style.color = 'var(--green)';
+    document.getElementById('config-banner').style.display = 'none';
+    isDemoMode = false;
+    loadData();
+  } else {
+    useDemoMode();
+  }
+  // Restore admin session if still active
+  if (getAdminGateState() === 'open') showAdminPanel();
+  else { showAdminGate(); updateAttemptsUI(); }
+  // Auto refresh every 5 minutes
+  setInterval(() => { if (!isDemoMode) loadData(); }, 5 * 60 * 1000);
+});
+</script>
+<style>
+/* Shake animation for wrong password */
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+.shake { animation: shake 0.45s ease; }
+</style>
+</body>
+</html>
