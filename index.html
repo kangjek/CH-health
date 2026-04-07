@@ -1015,8 +1015,19 @@ select.form-control { cursor: pointer; }
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Jumlah Stok Baru</label>
+            <label class="form-label">Jenis Input Stok</label>
+            <select class="form-control" id="admin-jenis-stok" onchange="toggleObatStockInputLabel()">
+              <option value="set">Set stok manual</option>
+              <option value="masuk">Obat masuk (+)</option>
+              <option value="keluar">Obat keluar (-)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="admin-stok-input-label">Jumlah Stok Baru</label>
             <input type="number" class="form-control" id="admin-stok-baru" min="0" placeholder="Masukkan jumlah stok"/>
+            <small style="color:var(--ink-light);display:block;margin-top:6px">
+              Gunakan pilihan <strong>Obat masuk/keluar</strong> untuk menambah atau mengurangi stok tanpa hitung manual.
+            </small>
           </div>
           <button class="btn btn-primary" onclick="submitUpdateObat()" style="width:100%">💾 Simpan Perubahan</button>
         </div>
@@ -1640,6 +1651,8 @@ function fillObatForm() {
   const idx = document.getElementById('admin-select-obat').value;
   if (idx === '') return;
   document.getElementById('admin-stok-baru').value = allObat[idx].stok;
+  document.getElementById('admin-jenis-stok').value = 'set';
+  toggleObatStockInputLabel();
 }
 function fillRuanganForm() {
   const idx = document.getElementById('admin-select-ruangan').value;
@@ -1652,15 +1665,52 @@ function fillRuanganForm() {
 
 // ── Submit Admin Obat ─────────────────────────────
 async function submitUpdateObat() {
-  const idx  = document.getElementById('admin-select-obat').value;
-  const stok = parseInt(document.getElementById('admin-stok-baru').value);
-  if (idx === '' || isNaN(stok)) { showToast('Pilih obat dan masukkan stok valid.', 'error'); return; }
+  const idx         = document.getElementById('admin-select-obat').value;
+  const jenisInput  = document.getElementById('admin-jenis-stok').value;
+  const inputStok   = parseInt(document.getElementById('admin-stok-baru').value);
+  if (idx === '' || isNaN(inputStok)) { showToast('Pilih obat dan masukkan stok valid.', 'error'); return; }
   const obat = allObat[idx];
-  await apiCall('updateObat', { rowIndex: obat.rowIndex, stok }, () => {
-    allObat[idx].stok = stok;
+  let stokBaru = inputStok;
+
+  if (jenisInput === 'masuk') {
+    stokBaru = obat.stok + inputStok;
+  } else if (jenisInput === 'keluar') {
+    stokBaru = obat.stok - inputStok;
+    if (stokBaru < 0) {
+      showToast(`Stok ${obat.nama} tidak cukup untuk pengeluaran ${inputStok} ${obat.satuan}.`, 'error');
+      return;
+    }
+  }
+
+  if (stokBaru < 0) { showToast('Stok tidak boleh negatif.', 'error'); return; }
+
+  await apiCall('updateObat', { rowIndex: obat.rowIndex, stok: stokBaru }, () => {
+    allObat[idx].stok = stokBaru;
     renderAll();
-    showToast(`Stok ${obat.nama} diperbarui ke ${stok} ${obat.satuan}.`, 'success');
+    if (jenisInput === 'masuk') {
+      showToast(`Obat masuk ${inputStok} ${obat.satuan}. Stok ${obat.nama} sekarang ${stokBaru}.`, 'success');
+    } else if (jenisInput === 'keluar') {
+      showToast(`Obat keluar ${inputStok} ${obat.satuan}. Stok ${obat.nama} sekarang ${stokBaru}.`, 'success');
+    } else {
+      showToast(`Stok ${obat.nama} diperbarui ke ${stokBaru} ${obat.satuan}.`, 'success');
+    }
   });
+}
+
+function toggleObatStockInputLabel() {
+  const jenisInput = document.getElementById('admin-jenis-stok').value;
+  const labelEl = document.getElementById('admin-stok-input-label');
+  const inputEl = document.getElementById('admin-stok-baru');
+  if (jenisInput === 'masuk') {
+    labelEl.textContent = 'Jumlah Obat Masuk';
+    inputEl.placeholder = 'Masukkan jumlah obat masuk';
+  } else if (jenisInput === 'keluar') {
+    labelEl.textContent = 'Jumlah Obat Keluar';
+    inputEl.placeholder = 'Masukkan jumlah obat keluar';
+  } else {
+    labelEl.textContent = 'Jumlah Stok Baru';
+    inputEl.placeholder = 'Masukkan jumlah stok';
+  }
 }
 
 async function submitTambahObat() {
